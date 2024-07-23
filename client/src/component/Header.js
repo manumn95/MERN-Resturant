@@ -31,7 +31,7 @@ const Header = () => {
           </div>
         </Link>
         <div className="flex items-center gap-5 md:gap-7">
-          <nav className="flex gap-4 md:gap-7 text-base md:text-lg">
+          <nav className=" gap-4 md:gap-7 text-base md:text-lg hidden md:flex">
             <Link to={""}>Home</Link>
             <Link to={"menu"}>Menu</Link>
             <Link to={"About"}>About</Link>
@@ -57,7 +57,7 @@ const Header = () => {
             </div>
 
             {showMenu && (
-              <div className="absolute right-2 bg-white  shadow drop-shadow-md flex flex-col">
+              <div className="absolute right-2 bg-white  shadow drop-shadow-md flex flex-col min-w-[120px]text-center">
                 {userData.email === process.env.REACT_APP_ADMIN_EMAIL && (
                   <Link
                     to={"newProduct"}
@@ -75,6 +75,7 @@ const Header = () => {
                     Logout
                    ({userData.firstName})
                   </p>
+                  
                 ) : (
                   <Link
                     to={"login"}
@@ -83,6 +84,12 @@ const Header = () => {
                     Login
                   </Link>
                 )}
+                  <nav className="text-base md:text-lg flex flex-col md:hidden ">
+            <Link to={""} className="px-2 py-1">Home</Link>
+            <Link to={"menu"} className="px-2 py-1">Menu</Link>
+            <Link to={"About"} className="px-2 py-1">About</Link>
+            <Link to={"contact"} className="px-2 py-1">Contact</Link>
+          </nav>
               </div>
             )}
           </div>
