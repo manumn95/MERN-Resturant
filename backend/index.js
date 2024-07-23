@@ -131,6 +131,12 @@ const dataSave = await data.save();
 
 });
 
+//get products
+app.get('/products',async(req,res)=>{
+  const data = await ProductModel.find({});
+  res.send(JSON.stringify(data))
+})
+
 app.listen(PORT, () => {
   console.log("server is running at" + PORT);
 });
