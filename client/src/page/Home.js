@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import bikeLogo from "../assest/bike.png";
 import HomeCard from "../component/HomeCard";
 import { useSelector } from "react-redux";
 import CardFeature from "../component/CardFeature";
 import { GrPrevious } from "react-icons/gr";
 import { GrNext } from "react-icons/gr";
-import FilterProduct from "../component/FilterProduct";
+
 import AllProduct from "../component/AllProduct";
 
 const Home = () => {
@@ -27,12 +27,6 @@ const Home = () => {
   const prevProduct = () => {
     slideProductRef.current.scrollLeft -= 200;
   };
-
-
-
-
-
-  
 
   return (
     <div className="p-2 md:p-4">
@@ -62,7 +56,7 @@ const Home = () => {
             ? homeProductCardList.map((el, index) => {
                 return (
                   <HomeCard
-                  id={el._id}
+                    id={el._id}
                     key={index}
                     image={el.image}
                     name={el.name}
@@ -123,7 +117,7 @@ const Home = () => {
         </div>
       </div>
 
-    <AllProduct heading={'Your products'}></AllProduct>
+      <AllProduct heading={"Your products"}></AllProduct>
     </div>
   );
 };
