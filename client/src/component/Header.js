@@ -37,9 +37,9 @@ const Header = () => {
             <Link to={"About"}>About</Link>
             <Link to={"contact"}>Contact</Link>
           </nav>
-          <div className="text-2xl text-slate-600 relative">
+          <div className="text-2xl text-slate-600 relative ">
             <FaCartShopping />
-            <div className="absolute -top-3 -right-1 text-white bg-red-500 h-4 text-sm text-center w-4 rounded-full m-0 p-0">
+            <div className="absolute -top-3 -right-1 text-white bg-red-500 h-4 text-sm text-center w-4 rounded-full m-0 p-0 flex justify-center items-center">
               0
             </div>
           </div>
@@ -58,18 +58,22 @@ const Header = () => {
 
             {showMenu && (
               <div className="absolute right-2 bg-white  shadow drop-shadow-md flex flex-col">
-                <Link
-                  to={"newProduct"}
-                  className="whitespace-nowrap cursor-pointer px-2"
-                >
-                  New product
-                </Link>
+                {userData.email === process.env.REACT_APP_ADMIN_EMAIL && (
+                  <Link
+                    to={"newProduct"}
+                    className="whitespace-nowrap cursor-pointer px-2"
+                  >
+                    New product
+                  </Link>
+                )}
+
                 {userData?.email ? (
                   <p
                     className="cursor-pointer text-white bg-red-600 px-2"
                     onClick={handleLogout}
                   >
                     Logout
+                   ({userData.firstName})
                   </p>
                 ) : (
                   <Link

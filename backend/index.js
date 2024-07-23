@@ -36,6 +36,17 @@ const userSchema = mongoose.Schema({
 });
 const UserModel = mongoose.model("user", userSchema);
 
+//product Schema
+const productSchema = mongoose.Schema({
+  name: String,
+  category: String,
+  image: String,
+  price: String,
+  description: String,
+});
+
+const ProductModel = mongoose.model("product", productSchema);
+
 app.get("/", (req, res) => {
   res.send("Server is Running");
 });
@@ -77,7 +88,7 @@ app.post("/login", async (req, res) => {
     lastName: user.lastName,
     email: user.email,
     image: user.image,
-    _id:user._id
+    _id: user._id,
   };
   if (user) {
     const isPasswordValid = await bcrypt.compare(
@@ -105,6 +116,19 @@ app.post("/login", async (req, res) => {
       error: true,
     });
   }
+});
+
+//Save product API
+
+app.post("/uploadProduct",async (req, res) => {
+ 
+const data = await ProductModel(req.body);
+const dataSave = await data.save();
+
+  res.send({
+    message:'upload Successfully'
+  })
+
 });
 
 app.listen(PORT, () => {
