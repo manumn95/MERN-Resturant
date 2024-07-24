@@ -142,34 +142,36 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 app.post("/checkout", async (req, res) => {
   try {
     const params = {
-      submit_type:'pay',
-      mode:'payment',
-      payment_method_types:['card'],
-      billing_address_collection:'auto',
-      shipping_options:[{shipping_rate:"shr_1Pb2DCGaXbsHDA1r5ZPAClBJ"}],
-      line_items:req.body.map((item)=>{
-        return{
-          price_data:{
-            currency:"inr",
-            product_data:{
-              name:item.name,
-              //image:[item.image],
-              
-            },
-            unit_amount:item.price *100
-          },
-          adjustable_quantity:{
-            enabled:true,
-            minimum:1
-          },
-          quantity:item.qty
+      submit_type: "pay",
+      mode: "payment",
+      payment_method_types: ["card"],
+      billing_address_collection: "auto",
+      shipping_options: [{ shipping_rate: "shr_1Pb2DCGaXbsHDA1r5ZPAClBJ" }],
 
-        }
+      line_items: req.body.map((item) => {
+        return {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: item.name,
+              // images : [item.image]
+            },
+            unit_amount: item.price * 100,
+          },
+          adjustable_quantity: {
+            enabled: true,
+            minimum: 1,
+          },
+          quantity: item.qty,
+        };
       }),
-      success_url:`${process.env.FRONTEND_URL}/success`,
-      cancel_url:`${process.env.FRONTEND_URL}/cancel`
+
+      success_url: `${process.env.FRONTEND_URL}/success`,
+      cancel_url: `${process.env.FRONTEND_URL}/cancel`,
     };
+
     const session = await stripe.checkout.sessions.create(params);
+    // console.log(session)
     res.status(200).json(session.id);
   } catch (err) {
     res.status(500).json(err.message);
