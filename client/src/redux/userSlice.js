@@ -14,6 +14,7 @@ export const userSlice = createSlice({
   reducers: {
     loginRedux: (state, action) => {
       const { _id, firstName, lastName, email, image } = action.payload.data;
+     
       state._id = _id; 
       state.firstName = firstName;
       state.lastName = lastName;
@@ -21,6 +22,7 @@ export const userSlice = createSlice({
       state.image = image;
     },
     logoutRedux:(state,action)=>{
+     
       state._id = ''; 
       state.firstName = '';
       state.lastName = '';
