@@ -1,10 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import CartProduct from "../component/CartProduct";
-import emptyCart from '../assest/empty.gif'
+import emptyCart from "../assest/empty.gif";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { loadStripe } from "@stripe/stripe-js";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const productData = useSelector((state) => state.product.cartItem);
+  const navigate = useNavigate()
+  const user = useSelector((state) => state.user);
   const totalPrice = productData.reduce(
     (acc, curr) => acc + parseInt(curr.total),
     0
@@ -14,60 +20,88 @@ const Cart = () => {
     (acc, curr) => acc + parseInt(curr.qty),
     0
   );
+
+  const handlePayment = async () => {
+    if (user?.email) {
+      const stripePromise = await loadStripe(process.env.REACT_APP_STRIPE_KEY);
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVER_DOMAIN}/checkout`,
+        productData
+      );
+      if (response.statuscode === 500) return;
+      console.log(response);
+
+      toast.success("Redirect to payment gateway.....");
+      stripePromise.redirectToCheckout({ sessionId: response.data });
+    }
+    else{
+      toast.error("Please login to make payments")
+      setTimeout(()=>{
+navigate('/login')
+      },1000)
+    }
+  };
+
   return (
     <>
       <div className="p-2 md:p-4">
         <h2 className="text-lg md:text-2xl font-bold text-slate-600">
           Your Cart Items
         </h2>
-        {productData[0] ?<div>
-          {/* Display cart items */}
+
+        {productData[0] ? (
           <div className="my-4 flex gap-3">
+            {/* display cart items  */}
             <div className="w-full max-w-3xl ">
-              {productData.map((el, index) => {
+              {productData.map((el) => {
                 return (
                   <CartProduct
-                    key={index}
+                    key={el._id}
+                    id={el._id}
                     name={el.name}
                     image={el.image}
                     category={el.category}
                     qty={el.qty}
                     total={el.total}
-                    id={el._id}
                     price={el.price}
-                  ></CartProduct>
+                  />
                 );
               })}
             </div>
-          </div>
 
-          {/* Total cart items */}
-          <div className="w-full max-w-md  ml-auto">
-            <h2 className="bg-blue-500 text-white p-2 text-lg">Summary</h2>
-            <div className="flex w-full py-2 text-lg border-b">
-              <p>Total Qty:</p>
-              <p className="ml-auto w-32 font-bold ">{totalQty}</p>
+            {/* total cart item  */}
+            <div className="w-full max-w-md  ml-auto">
+              <h2 className="bg-blue-500 text-white p-2 text-lg">Summary</h2>
+              <div className="flex w-full py-2 text-lg border-b">
+                <p>Total Qty :</p>
+                <p className="ml-auto w-32 font-bold">{totalQty}</p>
+              </div>
+              <div className="flex w-full py-2 text-lg border-b">
+                <p>Total Price</p>
+                <p className="ml-auto w-32 font-bold">
+                  <span className="text-red-500">₹</span> {totalPrice}
+                </p>
+              </div>
+              <button
+                className="bg-red-500 w-full text-lg font-bold py-2 text-white"
+                onClick={handlePayment}
+              >
+                Payment
+              </button>
             </div>
-
-            <div className="flex w-full py-2 text-lg border-b">
-              <p>Total Price:</p>
-              <p className="ml-auto w-32 font-bold ">
-                {" "}
-                <span className="text-red-500">₹</span>
-                {totalPrice}
-              </p>
-            </div>
-            <button className="bg-red-500 w-full text-lg font-bold py-2 text-white">
-              Payment
-            </button>
           </div>
-        </div>:<>
-        <div className="flex flex-col w-full justify-center items-center">
-          <img className="w-full max-w-sm" src={emptyCart} alt='emptyCart' />
-          <p className="text-slate-500 text-3xl font-bold">Your Cart Is Empty</p>
-        </div>
-        </>}
-       
+        ) : (
+          <>
+            <div className="flex w-full justify-center items-center flex-col">
+              <img
+                src={emptyCart}
+                alt="product-image"
+                className="w-full max-w-sm"
+              />
+              <p className="text-slate-500 text-3xl font-bold">Empty Cart</p>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
