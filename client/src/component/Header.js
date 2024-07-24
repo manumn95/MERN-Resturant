@@ -21,6 +21,7 @@ const Header = () => {
     toast.success("Logout Successfully");
   };
 
+  const cartItemNumber = useSelector(state=>state.product.cartItem)
   return (
     <header className="fixed shadow-md w-full h-16 px-2 md:px-4 z-50 bg-white">
       {/* Desktop */}
@@ -38,10 +39,12 @@ const Header = () => {
             <Link to={"contact"}>Contact</Link>
           </nav>
           <div className="text-2xl text-slate-600 relative ">
-            <FaCartShopping />
-            <div className="absolute -top-3 -right-1 text-white bg-red-500 h-4 text-sm text-center w-4 rounded-full m-0 p-0 flex justify-center items-center">
-              0
-            </div>
+            <Link to={"/cart"}>
+              <FaCartShopping />
+              <div className="absolute -top-4 -right-1 text-white bg-red-500 h-4 text-sm text-center w-4 rounded-full m-0 p-0 flex justify-center items-center">
+               {cartItemNumber.length}
+              </div>
+            </Link>
           </div>
           <div className="text-xl text-slate-600 " onClick={handleShowMenu}>
             <div className="text-3xl cursor-pointer w-8 h-8 rounded-full overflow-hidden drop-shadow">
@@ -72,10 +75,8 @@ const Header = () => {
                     className="cursor-pointer text-white bg-red-600 px-2"
                     onClick={handleLogout}
                   >
-                    Logout
-                   ({userData.firstName})
+                    Logout ({userData.firstName})
                   </p>
-                  
                 ) : (
                   <Link
                     to={"login"}
@@ -84,12 +85,20 @@ const Header = () => {
                     Login
                   </Link>
                 )}
-                  <nav className="text-base md:text-lg flex flex-col md:hidden ">
-            <Link to={""} className="px-2 py-1">Home</Link>
-            <Link to={"menu"} className="px-2 py-1">Menu</Link>
-            <Link to={"About"} className="px-2 py-1">About</Link>
-            <Link to={"contact"} className="px-2 py-1">Contact</Link>
-          </nav>
+                <nav className="text-base md:text-lg flex flex-col md:hidden ">
+                  <Link to={""} className="px-2 py-1">
+                    Home
+                  </Link>
+                  <Link to={"menu"} className="px-2 py-1">
+                    Menu
+                  </Link>
+                  <Link to={"About"} className="px-2 py-1">
+                    About
+                  </Link>
+                  <Link to={"contact"} className="px-2 py-1">
+                    Contact
+                  </Link>
+                </nav>
               </div>
             )}
           </div>

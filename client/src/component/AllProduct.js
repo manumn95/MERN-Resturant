@@ -9,7 +9,7 @@ const AllProduct = ({heading}) => {
     ...new Set(productData.map((el, index) => el.category)),
   ];
 
- 
+ const[filterby,setFilterBy] = useState('')
   const [dataFilter, setDataFilter] = useState([]);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const AllProduct = ({heading}) => {
   }, [productData]);
 
   const handleFilterProduct = (category) => {
-    
+    setFilterBy(category)
     const filter = productData.filter(
       (el) => el.category.toLowerCase() === category.toLowerCase()
     );
@@ -26,24 +26,30 @@ const AllProduct = ({heading}) => {
     });
   };
 
+  const loadingArrayFeatures=new Array(10).fill(null)
   return (
     <div className="my-5">
     <h1 className="font-bold text-2xl text-slate-800 mb-4">
        {heading}
     </h1>
     <div className="flex gap-4 justify-center overflow-scroll scrollbar-none">
-      {categoryList[0] &&
+      {categoryList[0]?
         categoryList.map((el, index) => {
           return (
             <FilterProduct
               category={el}
               onClick={() => handleFilterProduct(el)}
+              isActive={el === filterby}
             ></FilterProduct>
           );
-        })}
+        }):(
+          <div className="min-h-[150px] flex justify-center items-center">
+         <p>Loading...</p>
+       </div>
+        )}
     </div>
     <div className="flex flex-wrap justify-center gap-4 my-4">
-      {dataFilter.map((el, index) => {
+      { dataFilter[0] ?dataFilter.map((el, index) => {
         return (
          
           <CardFeature
@@ -55,7 +61,13 @@ const AllProduct = ({heading}) => {
             price={el.price}
           ></CardFeature>
         );
+      }):
+      loadingArrayFeatures.map((el, index) => {
+        return (
+          <CardFeature key={index} loading="loading...."></CardFeature>
+        );
       })}
+      
     </div>
   </div>
   )
